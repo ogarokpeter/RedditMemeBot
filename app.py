@@ -171,14 +171,14 @@ def get_meme(channels=['all'], limit=1, sort='hot'):
         memes = []
         for submission in get_subreddit(reddit, subreddit=subreddit, limit=limit, sort=sort):
             memes.append(submission.url)
-        text = ("Here are {} memes from {} channel:".format(len(memes), subreddit) 
+        text = ("Here are {} memes from '{}' channel:".format(len(memes), subreddit) 
                if len(memes) > 0 
-               else "Unfortunately no memes on {} channel.")
+               else "Unfortunately no memes on '{}' channel.")
         text_response.append(text)
         text_response += memes
         logging.info("get_meme: " + ''.join(text_response))
     except Exception as e:
-        text_response.append("Problems accessing channel {}, probably you mistyped.".format(subreddit))
+        text_response.append("Problems accessing '{}' channel, probably you mistyped.".format(subreddit))
         logging.info("get_meme: " + traceback.format_exc())
     return text_response, non_text_response
 
@@ -209,16 +209,16 @@ def get_subscriptions(recipient_id, limit=1, sort='hot'):
                 if submission.url not in last_viewed:
                     logging.info("get_subscriptions: " + submission.url)
                     memes.append(submission.url)
-            text = ("Here are {} new memes from {} channel ({} sorting) since you've last viewed it:".format(len(memes) 
+            text = ("Here are {} new memes from '{}' channel ('{}' sorting) since you've last viewed it:".format(len(memes) 
                 if len(memes) < limit 
                 else "many", 
                 subreddit, sort) 
             if len(memes) > 0 
-            else "Unfortunately no new memes on {} channel ({} sorting) since you've last viewed it.".format(subreddit, sort))
+            else "Unfortunately no new memes on '{}' channel ('{}' sorting) since you've last viewed it.".format(subreddit, sort))
             text_response.append(text)
             text_response += memes
         except Exception as e:
-            text_response.append("Problems accessing channel {}, probably you mistyped.".format(subreddit))
+            text_response.append("Problems accessing '{}' channel, probably you mistyped.".format(subreddit))
             logging.info("get_subscriptions: " + traceback.format_exc())
     return text_response, non_text_response
 
@@ -238,7 +238,7 @@ def subscribe(recipient_id, channels=['all']):
         except Exception as e:
             logging.info("subscribe: cannot add {}".format(subreddit))
             logging.info("subscribe: " + traceback.format_exc())
-    text = ("Successfully subscribed to channels: {}. ".format(', '.join(subscribed_list)) + ("" 
+    text = ("Successfully subscribed to channels: '{}'. ".format("', '".join(subscribed_list)) + ("" 
             if len(subscribed_list) == len(channels)
             else "Others are inaccessible or you've already subscribed to them.")
         if len(subscribed_list) != 0
@@ -275,7 +275,7 @@ def unsubscribe(recipient_id, channels=['all']):
             key = '{}, {}, {}'.format(recipient_id, subreddit, sort)
             r.delete(key)
             logging.info("unsubscribe: " + key)
-    text = ("Successfully unsubscribed from channels: {}. ".format(', '.join(unsubscribed_list)) + ("" 
+    text = ("Successfully unsubscribed from channels: '{}'. ".format("', '".join(unsubscribed_list)) + ("" 
             if len(unsubscribed_list) == len(channels)
             else "You've not subscribed to others.")
         if len(unsubscribed_list) != 0
