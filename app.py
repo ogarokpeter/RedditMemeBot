@@ -83,7 +83,7 @@ def is_image(url):
 
 
 def is_video(url):
-    return url.endswith(".gif") or url.endswith(".png")
+    return url.endswith(".gif") or url.endswith(".gifv")
 
 
 def send_message(recipient_id, response_text, response_non_text):
