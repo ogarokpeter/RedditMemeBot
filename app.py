@@ -82,10 +82,6 @@ def is_image(url):
     return url.endswith(".jpg") or url.endswith(".png")
 
 
-def is_video(url):
-    return url.endswith(".gif") or url.endswith(".gifv")
-
-
 def send_message(recipient_id, response_text, response_non_text):
     #sends user the text message provided via input response parameter
     success = True
@@ -93,8 +89,6 @@ def send_message(recipient_id, response_text, response_non_text):
         try:
             if is_image(message):
                 bot.send_image_url(recipient_id, message)
-            elif is_video(message):
-                bot.send_video_url(recipient_id, message)
             else:
                 bot.send_text_message(recipient_id, message)
         except Exception as e:
