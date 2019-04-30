@@ -33,6 +33,7 @@ app = Flask(__name__)
 bot = Bot(keys['ACCESS_TOKEN'])
 
 sortings = ['controversial', 'hot', 'top', 'new', 'gilded', 'random_rising', 'rising']
+numbers = list(range(1, 11))
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -77,12 +78,25 @@ def verify_fb_token(token_sent):
     return 'Invalid verification token'
 
 
+def is_image(url):
+    return url.endswith(".jpg") or url.endswith(".png")
+
+
+def is_video(url):
+    return url.endswith(".gif") or url.endswith(".png")
+
+
 def send_message(recipient_id, response_text, response_non_text):
     #sends user the text message provided via input response parameter
     success = True
     for message in response_text:
         try:
-            bot.send_text_message(recipient_id, message)
+            if is_image(message):
+                bot.send_image_url(recipient_id, message)
+            elif is_video(message):
+                bot.send_video_url(recipient_id, message)
+            else:
+                bot.send_text_message(recipient_id, message)
         except Exception as e:
             success = False
             logging.error("send_message: " + traceback.format_exc())
@@ -100,7 +114,7 @@ def parse(command):
     parser = ThrowingArgumentParser()
     parser.add_argument('action', default='show_memes', 
         choices=['show_memes', 'show_subscriptions', 'subscribe', 'unsubscribe'], help='What do you want to do?')
-    parser.add_argument('--number', '-n', default=1, help='Number of memes to display')
+    parser.add_argument('--number', '-n', default=1, type=int, choices=numbers, help='Number of memes to display')
     parser.add_argument('--sort', '-s', default='hot', choices=sortings, help='Sorting of memes')
     parser.add_argument('--channels', '-c', default=['all'], nargs='*', help='Channels where to search memes')
     args = parser.parse_args(command)
@@ -116,7 +130,7 @@ def proceed(recipient_id, text):
     if '--help' in command or '-h' in command:
         logging.info("proceed: Help command")
         return [
-"""usage: [-h] [--number NUMBER]
+"""usage: [-h] [--number {1,2,3,4,5,6,7,8,9,10}]
                  [--sort {controversial,hot,top,new,gilded,random_rising,rising}]
                  [--channels [CHANNELS [CHANNELS ...]]]
                  {show_memes,show_subscriptions,subscribe,unsubscribe}
