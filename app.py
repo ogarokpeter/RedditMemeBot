@@ -118,7 +118,7 @@ def proceed(recipient_id, text):
     if '--help' in command or '-h' in command:
         logging.info("proceed: Help command")
         return [
-"""usage: [-h] [--number {""" + ','.join(numbers) + """}]
+"""usage: [-h] [--number {""" + ','.join([str(x) for x in numbers]) + """}]
                  [--sort {""" + ','.join([str(x) for x in sortings]) + """}]
                  [--channels [CHANNELS [CHANNELS ...]]]
                  {show_memes,show_subscriptions,subscribe,unsubscribe}
