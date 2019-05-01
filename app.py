@@ -119,7 +119,7 @@ def proceed(recipient_id, text):
         logging.info("proceed: Help command")
         return [
 """usage: [-h] [--number {""" + ','.join(numbers) + """}]
-                 [--sort {""" + ','.join(sortings) + """}]
+                 [--sort {""" + ','.join([str(x) for x in sortings]) + """}]
                  [--channels [CHANNELS [CHANNELS ...]]]
                  {show_memes,show_subscriptions,subscribe,unsubscribe}
 """     ], []
