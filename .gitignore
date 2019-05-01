@@ -1,4 +1,4 @@
-redis-stable
-redis-stable.tar.gz
+redis-*
 reddit.py
-bot.log
+*.log
+keys
