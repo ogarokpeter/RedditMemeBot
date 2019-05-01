@@ -58,8 +58,8 @@ def receive_message():
                 if message['message'].get('text'):
                     text = message['message'].get('text')
                     logging.info("receive_message: " + text)
-                    response_sent_text, response_sent_non_text = proceed(recipient_id, text)
-                    send_message(recipient_id, response_sent_text, response_sent_non_text)
+                    response_sent_text = proceed(recipient_id, text)
+                    send_message(recipient_id, response_sent_text)
                 #if user sends us a GIF, photo,video, or any other non-text item
                 if message['message'].get('attachments'):
                     logging.error("receive_message: Non-text!!!")
@@ -82,7 +82,7 @@ def is_image(url):
     return url.endswith(".jpg") or url.endswith(".png")
 
 
-def send_message(recipient_id, response_text, response_non_text):
+def send_message(recipient_id, response_text):
     #sends user the text message provided via input response parameter
     success = True
     for message in response_text:
@@ -91,12 +91,6 @@ def send_message(recipient_id, response_text, response_non_text):
                 bot.send_image_url(recipient_id, message)
             else:
                 bot.send_text_message(recipient_id, message)
-        except Exception as e:
-            success = False
-            logging.error("send_message: " + traceback.format_exc())
-    for message in response_non_text:
-        try:
-            bot.send_text_message(recipient_id, message)
         except Exception as e:
             success = False
             logging.error("send_message: " + traceback.format_exc())
@@ -124,8 +118,8 @@ def proceed(recipient_id, text):
     if '--help' in command or '-h' in command:
         logging.info("proceed: Help command")
         return [
-"""usage: [-h] [--number {1,2,3,4,5,6,7,8,9,10}]
-                 [--sort {controversial,hot,top,new,gilded,random_rising,rising}]
+"""usage: [-h] [--number {""" + ','.join(numbers) + """}]
+                 [--sort {""" + ','.join(sortings) + """}]
                  [--channels [CHANNELS [CHANNELS ...]]]
                  {show_memes,show_subscriptions,subscribe,unsubscribe}
 """     ], []
@@ -136,7 +130,7 @@ def proceed(recipient_id, text):
     except Exception as e:
         logging.info("proceed: User typed invalid command")
         logging.info(traceback.format_exc())
-        return make_negative_response(), []
+        return make_negative_response()
 
     if args.action == 'show_memes':
         return get_meme(channels=args.channels, limit=args.number, sort=args.sort)
@@ -174,7 +168,6 @@ def get_meme(channels=['all'], limit=1, sort='hot'):
                          user_agent=keys['USER_AGENT'])
     # print(subreddit)
     text_response = []
-    non_text_response = []
     try:
         memes = []
         for submission in get_subreddit(reddit, subreddit=subreddit, limit=limit, sort=sort):
@@ -188,7 +181,7 @@ def get_meme(channels=['all'], limit=1, sort='hot'):
     except Exception as e:
         text_response.append("Problems accessing '{}' channel, probably you mistyped.".format(subreddit))
         logging.info("get_meme: " + traceback.format_exc())
-    return text_response, non_text_response
+    return text_response
 
 
 def get_subscriptions(recipient_id, limit=1, sort='hot'):
@@ -198,7 +191,6 @@ def get_subscriptions(recipient_id, limit=1, sort='hot'):
     subscription_list = [str(x) for x in r.smembers(recipient_id)]
 
     text_response = []
-    non_text_response = []
     if len(subscription_list) == 0:
         logging.info("get_subscriptions: No subscriptions")
         text_response.append("You currently have no subscriptions. Subscribe to some channels.")
@@ -228,7 +220,7 @@ def get_subscriptions(recipient_id, limit=1, sort='hot'):
         except Exception as e:
             text_response.append("Problems accessing '{}' channel, probably you mistyped.".format(subreddit))
             logging.info("get_subscriptions: " + traceback.format_exc())
-    return text_response, non_text_response
+    return text_response
 
 
 def subscribe(recipient_id, channels=['all']):
@@ -254,8 +246,7 @@ def subscribe(recipient_id, channels=['all']):
             if len(subscribed_list) == len(channels)
             else "They are inaccessible or you've already subscribed to them."))
     text_response = [text]
-    non_text_response = []
-    return text_response, non_text_response
+    return text_response
 
 
 def unsubscribe(recipient_id, channels=['all']):
@@ -265,8 +256,7 @@ def unsubscribe(recipient_id, channels=['all']):
     if len(channels) == 0:
         logging.info("unsubscribe: No channels")
         text_response = ["No channels to unsunscribe."]
-        non_text_response = []
-        return text_response, non_text_response
+        return text_response
     unsubscribed_list = []
     for subreddit in channels:
         try:
@@ -291,8 +281,7 @@ def unsubscribe(recipient_id, channels=['all']):
             if len(unsubscribed_list) == len(channels)
             else "You've not subscribed to them."))
     text_response = [text]
-    non_text_response = []
-    return text_response, non_text_response
+    return text_response
 
 
 def make_negative_response(messages=[]):
