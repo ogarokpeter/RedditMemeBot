@@ -122,7 +122,7 @@ def proceed(recipient_id, text):
                  [--sort {""" + ','.join([str(x) for x in sortings]) + """}]
                  [--channels [CHANNELS [CHANNELS ...]]]
                  {show_memes,show_subscriptions,subscribe,unsubscribe}
-"""     ], []
+"""     ]
 
     try:
         args = parse(command)
