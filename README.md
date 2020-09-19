@@ -1,4 +1,26 @@
-# Постановка задачи
+# Reddit Meme Bot for Facebook Messenger
+
+## Description
+
+A bot for Facebook Messenger that aggregates and presents to a user new and/or interesting posts from Reddit. It can show a specified number of posts from all Reddit, or from certain channels. It also supports subscriptions: a user can subscrive to certain channels via the bot, and get updates from these channels every time she/he is on Messenger. The stores user data persistently in a Redis database.
+
+Users can communicate with the bot via hardcore CLI it parses. To see all supported commands, type '--help'.
+
+Bot was implemented as a task in my university. The description of the task (in Russian) is below.
+
+## How to run
+
+Requirements: you need to have [localtunnel](https://github.com/localtunnel/localtunnel) and [Redis](https://redis.io/) installed, as well as python packages from the requirements.txt file.
+
+Main steps to run a bot are described [here](https://www.twilio.com/blog/2017/12/facebook-messenger-bot-python.html): you need a Facebook developer account, a Reddit developer account and a webhook. To obtain the webhook, run localtunnel and update webhook link in Facebook interface. Then run Redis to create a database. After that, you can run a bot by typing
+
+```$ python3 app.py```
+
+To ensure stability, the best thing is to run a bot on a server or a cloud instance.
+
+## Description of the task (Russian)
+
+### Постановка задачи
 Напишите и разверните Faсebook Messenger бота для агрегации мемов.
 
 Ваш бот должен уметь по команде отправлять пользователю интересный контент. 
@@ -14,7 +36,7 @@
 https://www.reddit.com/dev/api
 
 
-# Как решать задачу
+### Как решать задачу
 1. Разверните локально web-сервис, который поддержит протокол взаимодействия с Facebook Messgenger.
 https://developers.facebook.com/docs/messenger-platform
 Научитесь получать текстовые сообщения, и отправлять на них в ответ.
@@ -48,8 +70,8 @@ https://redis.io/
 
 
 ----
-# Как сдавать задачу
-## submit.py
+### Как сдавать задачу
+#### submit.py
 Необходимо положить код бота и отчёт в папку с задачей.
 Отчёт надо положить в файлик report.md, настоятельно рекомендуется разобраться в форматировании 
 [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
@@ -64,20 +86,20 @@ https://redis.io/
 Задачу надо сдать в систему до дедлайна, система выдаст 1 балл и проверит лишь что вы в срок сдали задание.
 Проверка будет проходить в ручном режиме. Баллы проставят в табличку с оценками после проверки всех работ
 
-## выдать админский доступ к вашему приложению на Facebook для преподавателей курса
+#### выдать админский доступ к вашему приложению на Facebook для преподавателей курса
 Публикация бота для широкой публики - некий бюрократический процесс, 
 который может затянуться или вовсе не закончиться успехом. 
 
 Чтобы мы смогли оценить ваши продуктовые фичи, вы можете добавить преподавателей в администраторы приложения.
 TODO: инструкция как это сделать.
 
-# Критерии оценки
+### Критерии оценки
 Максимальный балл за задание - 200 баллов.
 Сверх этого за задачу возможны бонусы. 
 Бонусы - это баллы, которые идут в числитель накопительной оценки за курс, но не в знаменатель.
 
 
-## Что влияет на оценку
+#### Что влияет на оценку
 1. Самое главное - It's alive! Бот работает, с ним можно поговорить, он присылает свеженькие приколы. 
 ~70 баллов
 
